@@ -1,7 +1,8 @@
+import java.util.Objects;
 import java.util.Random;
 
 public class Hashing {
-    static final int U = 64;
+    static final int U = 80;
     int n;
     String[] S;
     int noCollision;
@@ -16,19 +17,50 @@ public class Hashing {
     }
 
     //batch insert
-    void insert(String[] s){
+    void batchinsert(String[] s){
 
         String[] newS = new String[this.n+s.length];
         for(int i = 0; i < this.n; i++){
             newS[i] = S[i];
         }
-        this.n += s.length;
-        for(int j = S.length; j < this.n; j++){
-            newS[j] = s[j- S.length];
+        for(int j = this.n; j < this.n + s.length; j++){
+            newS[j] = s[j- this.n];
         }
+        n=n+s.length;
         S = newS;
+        if(s.length > 1){
         this.noCollision = -1;
+            System.out.println("Performed Batch insert to " + s.length + " elements");
+        }
+        else{
+            this.noCollision++;
+            System.out.println("Inserted " + s[0]);
+        }
+
     }
+
+
+
+    void deleteElement(String value) {
+        int indexToDelete = -1;
+        for (int i = 0; i < S.length; i++) {
+            if (Objects.equals(S[i], value)) {
+                indexToDelete = i;
+                break;
+            }
+        }
+
+        if (indexToDelete == -1) {
+            return; // value not found
+        }
+
+        for (int i = indexToDelete; i < S.length - 1; i++) {
+            S[i] = S[i + 1]; // shift elements to the left
+        }
+
+        S[S.length - 1] = null; // remove last element
+    }
+
 
     // generate random H
     public int[][] randomH(int b) {
