@@ -22,13 +22,17 @@ public class ON2 {
         hashFunction();
     }
 
+
     /*this function generate random h and multiply by the element in array to get index
     if that index exists before ,so it is collision so will loop again from beginning of array
     to find hash function suitable for all elements of array without collision
     * */
     public void hashFunction() {
         String[] s = hashing.S;
+        n = hashing.n;
         H = hashing.randomH(b);
+        result = new String[n * n];
+        exist = new boolean[n * n];
         boolean hashed = false;
         while (!hashed) {
             hashed = true;
@@ -50,6 +54,28 @@ public class ON2 {
                 }
             }
 
+            System.out.println("Hash result is " + n +"X"+ n);
+
+        }
+    }
+
+    void insert(String value){
+        boolean Hashed = false;
+        int[] indexBinary = hashing.multiply(H, value);
+        int index = hashing.convertToDecimal(indexBinary);
+        if(exist[index]){
+            String[] s = new String[1];
+            s[0] = value;
+            hashing.batchinsert(s);
+            n = hashing.n;
+            hashFunction();
+            print();
+            System.out.println("Failed to hash directly");
+        }else{
+            result[index] = value;
+            exist[index] = true;
+            print();
+            System.out.println("Hashed Directly");
         }
     }
 
@@ -60,6 +86,9 @@ public class ON2 {
 
     public void print() {
         int j = 0;
+//        if(n < hashing.n){
+            n = hashing.n;
+//        }
         for (int i = 0; i < n * n; i++) {
             if (exist[i]) {
                 System.out.println("String \"" + result[i] + "\"  found at index : " + i);
@@ -80,14 +109,17 @@ public class ON2 {
         }
     }
 
-    public void delete(String value){
+    public boolean delete(String value){
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
         if (exist[index] && Objects.equals(result[index], value)) {
             exist[index] = false;
-            result[index] = "";
+            result[index] = null;
             hashing.n --;
-            print();
+            hashing.deleteElement(value);
+            return true;
+        }else{
+            return false;
         }
     }
 
