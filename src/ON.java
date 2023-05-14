@@ -34,19 +34,23 @@ public class ON {
     // make the level 2 hashing by making O(n^2) hashing for each cell
     private void constructLevel2(ArrayList<String>[] level1) {
         for (int i = 0; i < this.n; i++) {
-            Hashing Hi = new Hashing(toArray(level1[i]));
-            ON2 sec = new ON2(Hi);
-            h2funs[i] = sec.H;
-            result[i] = sec.result;
+            if (level1[i].size() != 0) {
+                Hashing Hi = new Hashing(toArray(level1[i]));
+                ON2 sec = new ON2(Hi);
+                h2funs[i] = sec.H;
+                result[i] = sec.result;
+            }
         }
     }
 
     // search
     public boolean search(String s) {
         int i = hash.hashCode(s, h1fun);
-        int j = hash.hashCode(s, h2funs[i]);
-        if (s.equals(result[i][j]))
-            return true;
+        if (h2funs[i].length != 0) {
+            int j = hash.hashCode(s, h2funs[i]);
+            if (s.equals(result[i][j]))
+                return true;
+        }
         notFound++;
         return false;
     }
@@ -55,14 +59,15 @@ public class ON {
     ////////////////////////////// need edit
     public boolean delete(String s) {
         int i = hash.hashCode(s, h1fun);
-        int j = hash.hashCode(s, h2funs[i]);
-        if (s.equals(result[i][j])) {
-            ////////////// change 0 to ""
-            result[i][j] = 0;
-            return true;
-        } else {
-            return false;
+        if (h2funs[i].length != 0) {
+            int j = hash.hashCode(s, h2funs[i]);
+            if (s.equals(result[i][j])) {
+                ////////////// change 0 to ""
+                result[i][j] = 0;
+                return true;
+            }
         }
+        return false;
     }
 
     // insert
