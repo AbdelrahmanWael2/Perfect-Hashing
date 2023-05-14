@@ -6,9 +6,27 @@ public class Hashing {
     String[] S;
     int noCollision;
 
+
+
+
     Hashing(String[] s){
         this.n = s.length;
         this.S = s;
+        this.noCollision = -1;
+    }
+
+    //batch insert
+    void insert(String[] s){
+
+        String[] newS = new String[this.n+s.length];
+        for(int i = 0; i < this.n; i++){
+            newS[i] = S[i];
+        }
+        this.n += s.length;
+        for(int j = S.length; j < this.n; j++){
+            newS[j] = s[j- S.length];
+        }
+        S = newS;
         this.noCollision = -1;
     }
 
