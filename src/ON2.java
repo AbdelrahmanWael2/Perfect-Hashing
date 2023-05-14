@@ -1,24 +1,23 @@
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class ON2 {
-    int[] result;
+    String[] result;
     int H[][]; // Zeros and ones
     boolean[] exist;
     int b;
     int n;
     Hashing hashing;
-    HashMap<String, Integer> indexMap; // to store indices of strings for faster searching
 
     public ON2(Hashing hash) {
         this.hashing = hash;
         n = hashing.n;
-        result = new int[n * n];
+        result = new String[n * n];
         exist = new boolean[n * n];
         b = (int) Math.floor(Math.log(Math.pow(n, 2)) / Math.log(2));
         H = new int[b][hashing.U];
-        indexMap = new HashMap<String, Integer>();
         System.out.println("Using Order N^2 method");
         hashFunction();
     }
@@ -30,7 +29,6 @@ public class ON2 {
     public void hashFunction() {
         String[] s = hashing.S;
         H = hashing.randomH(b);
-
         boolean hashed = false;
         while (!hashed) {
             hashed = true;
@@ -42,19 +40,18 @@ public class ON2 {
                     H = hashing.randomH(b);
                     hashed = false;
                     Arrays.fill(exist, false);
-                    Arrays.fill(result, 0);
-                    indexMap.clear(); // clear the map
+                    Arrays.fill(result, "");
+
                     break;
                 } else {
-                    result[index] = i;
+                    result[index] = s[i];
                     exist[index] = true;
-                    indexMap.put(s[i], index); // store index of string in map
+
                 }
             }
+
         }
     }
-
-
 
 
     public int noOfHashFuns() {
@@ -62,23 +59,36 @@ public class ON2 {
     }
 
     public void print() {
+        int j = 0;
         for (int i = 0; i < n * n; i++) {
             if (exist[i]) {
-                System.out.println("String \"" + hashing.S[result[i]] + "\"  found at index : " + i);
+                System.out.println("String \"" + result[i] + "\"  found at index : " + i);
+                j++;
             }
         }
         System.out.println("Number to re-build the hash table in the case of collision = " + hashing.noCollision);
-
     }
-
     //search for element if existed, and it's location using O(1) time complexity
     //worst case complexity is O(n) if all collisions happen
     public void lookUp(String value) {
-        Integer index = indexMap.get(value);
-        if (index != null && exist[index]) {
+        int[] indexBinary = hashing.multiply(H, value);
+        int index = hashing.convertToDecimal(indexBinary);
+        if (exist[index] && Objects.equals(result[index], value)) {
             System.out.println("String \"" + value + "\"  found at index " + index);
         } else {
             System.out.println("String \"" + value + "\" not found !!");
         }
     }
+
+    public void delete(String value){
+        int[] indexBinary = hashing.multiply(H, value);
+        int index = hashing.convertToDecimal(indexBinary);
+        if (exist[index] && Objects.equals(result[index], value)) {
+            exist[index] = false;
+            result[index] = "";
+            hashing.n --;
+            print();
+        }
+    }
+
 }
