@@ -17,7 +17,7 @@ public class ON2 {
         result = new String[n * n];
         exist = new boolean[n * n];
         b = (int) Math.floor(Math.log(Math.pow(n, 2)) / Math.log(2));
-        H = new int[b][hashing.U];
+        H = new int[b][Hashing.U];
         System.out.println("Using Order N^2 method");
         hashFunction();
     }
@@ -99,13 +99,13 @@ public class ON2 {
     }
     //search for element if existed, and it's location using O(1) time complexity
     //worst case complexity is O(n) if all collisions happen
-    public void lookUp(String value) {
+    public String lookUp(String value) {
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
         if (exist[index] && Objects.equals(result[index], value)) {
-            System.out.println("String \"" + value + "\"  found at index " + index);
+           return "String \"" + value + "\"  found at index " + index;
         } else {
-            System.out.println("String \"" + value + "\" not found !!");
+            return "String \"" + value + "\" not found !!";
         }
     }
 
