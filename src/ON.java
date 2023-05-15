@@ -22,6 +22,7 @@ public class ON {
         while (!acceptable())
             hashFunction();
         constructLevel2();
+        n = result.length;
     }
 
     private void hashFunction() {
@@ -32,7 +33,7 @@ public class ON {
     // make the level 1 hashing by putting each element in its place with collsion
     private ArrayList<String>[] constructLevel1() {
         level1 = new ArrayList[this.n];
-        for (int i = 0; i < this.n; i++) {
+        for (int i = 0; i < hash.S.length; i++) {
             int index = hash.hashCode(hash.S[i], h1fun);
             if (level1[index] == null) {
                 level1[index] = new ArrayList<String>();
@@ -47,7 +48,7 @@ public class ON {
 
     // check that level 1 is acceptable
     private boolean acceptable() {
-        order = n;
+        order = hash.S.length;
         int count = 0;
         for (int i = 0; i < level1.length; i++) {
             if (level1[i] != null) {
@@ -56,8 +57,11 @@ public class ON {
             }
 
         }
-        if (count >= 2 * n)
+        if (count >= 5 * hash.S.length) {
+            n = hash.n;
             return false;
+        }
+
         else {
             return true;
         }
@@ -84,7 +88,7 @@ public class ON {
     // search
     public boolean search(String s) {
         int i = hash.hashCode(s, h1fun);
-        if (h2funs[i].length != 0) {
+        if (h2funs[i] != null) {
             int j = hash.hashCode(s, h2funs[i]);
             if (s.equals(result[i][j]))
                 return true;
@@ -96,12 +100,13 @@ public class ON {
     // delete
     public boolean delete(String s) {
         int i = hash.hashCode(s, h1fun);
-        if (h2funs[i] != null && h2funs[i].length != 0) {
+        if (h2funs[i] != null) {
             int j = hash.hashCode(s, h2funs[i]);
             if (s.equals(result[i][j])) {
                 result[i][j] = null;
                 hash.S = remove(hash.S, s);
-                this.n--;
+                hash.n--;
+                sequance();
                 return true;
             }
         }
@@ -112,16 +117,19 @@ public class ON {
     public boolean insert(String s) {
         int i = hash.hashCode(s, h1fun);
         // there is a collision in level 1
-        if (h2funs[i] != null && h2funs[i].length != 0) {
+        if (h2funs[i] != null) {
             int j = hash.hashCode(s, h2funs[i]);
             // level 2 is ready just insert
-            if (result[i][j] == null) {
+            if (result[i][j] == null || result[i].length == 1) {
+                hash.n++;
                 hash.S = concat(hash.S, s);
                 level1[i].add(s);
                 if (!acceptable()) {
                     sequance();
-                } else
+                } else {
                     result[i][j] = s;
+                }
+
                 return true;
             }
             // already exists
@@ -129,11 +137,14 @@ public class ON {
                 return false;
             // need rehash the same cell has another word
             else {
+                hash.n++;
                 hash.S = concat(hash.S, s);
+                level1[i].add(s);
                 sequance();
                 return true;
             }
         } else {
+            hash.n++;
             hash.S = concat(hash.S, s);
             String[] temp = new String[1];
             temp[0] = s;
@@ -194,7 +205,7 @@ public class ON {
             }
 
         }
-        System.out.println("order is " + order + " size is " + n);
+        System.out.println("order is " + order + " size is " + hash.n);
     }
 
 }
