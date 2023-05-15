@@ -72,6 +72,10 @@ public class ON {
                 Hashing Hi = new Hashing(toArray(level1[i]));
                 ON2 sec = new ON2(Hi);
                 h2funs[i] = sec.H;
+                for (int j = 0; j < sec.result.length; j++) {
+                    if (sec.result[j] == "")
+                        sec.result[j] = null;
+                }
                 result[i] = sec.result;
             }
         }
