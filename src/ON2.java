@@ -1,7 +1,6 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Objects;
+import java.io.*;
+import java.util.*;
+
 
 public class ON2 {
     String[] result;
@@ -23,12 +22,28 @@ public class ON2 {
     }
 
 
+    public static String[] removeNulls(String[] strings) {
+        List<String> filteredList = new ArrayList<>();
+
+        for (String str : strings) {
+            if (str != null) {
+                filteredList.add(str);
+            }
+        }
+
+        // Convert the list back to an array
+        String[] filteredArray = new String[filteredList.size()];
+        filteredList.toArray(filteredArray);
+
+        return filteredArray;
+    }
     /*this function generate random h and multiply by the element in array to get index
     if that index exists before ,so it is collision so will loop again from beginning of array
     to find hash function suitable for all elements of array without collision
     * */
     public void hashFunction() {
         String[] s = hashing.S;
+        s = removeNulls(s);
         n = hashing.n;
         H = hashing.randomH(b);
         result = new String[n * n];
@@ -36,7 +51,7 @@ public class ON2 {
         boolean hashed = false;
         while (!hashed) {
             hashed = true;
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < s.length; i++) {
                 int[] indexBinary = hashing.multiply(H, s[i]);
                 int index = hashing.convertToDecimal(indexBinary);
                 if (exist[index]) {
@@ -54,7 +69,7 @@ public class ON2 {
                 }
             }
 
-            System.out.println("Hash result is " + n +"X"+ n);
+            //System.out.println("Hash result is " + n +"X"+ n);
 
         }
     }
@@ -63,43 +78,69 @@ public class ON2 {
         boolean Hashed = false;
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
+        if(Objects.equals(result[index], value)){
+            return;
+        }
         if(exist[index]){
             String[] s = new String[1];
             s[0] = value;
             hashing.batchinsert(s);
             n = hashing.n;
             hashFunction();
-            print();
+
             System.out.println("Failed to hash directly");
         }else{
             result[index] = value;
             exist[index] = true;
-            print();
+            hashing.insertElement(value);
+
             System.out.println("Hashed Directly");
         }
+    }
+
+    void batchInsertion(String[] s){
+        for(int i = 0; i < s.length; i++){
+        int[] indexBinary = hashing.multiply(H, s[i]);
+        int index = hashing.convertToDecimal(indexBinary);
+        if(Objects.equals(result[index], s[i])){
+            result[index] = null;
+        }
+        }
+
+        hashing.batchinsert(s);
+
     }
 
 
     public int noOfHashFuns() {
         return hashing.noCollision;
     }
+    // Method to clear the contents of a file
+    public static void clearFileContents(String filePath) throws IOException {
+        FileWriter fileWriter = new FileWriter(filePath, false);
+        fileWriter.close();
+    }
 
-    public void print() {
-        int j = 0;
-//        if(n < hashing.n){
+    public void print()  {
+
             n = hashing.n;
-//        }
-        for (int i = 0; i < n * n; i++) {
-            if (exist[i]) {
-                System.out.println("String \"" + result[i] + "\"  found at index : " + i);
-                j++;
-            }
-        }
+            String filePath = "src/Output.txt";
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
+            clearFileContents(filePath);
+            for (int i = 0; i < n * n; i++) {
+                if (exist[i]) {
+                    writer.write("String \"" + result[i]+ "\"  found at index : " + i );
+                    writer.newLine();
+                }
+            }writer.close();} catch (IOException e) {System.err.println("Error: " + e.getMessage());}
+
+
         System.out.println("Number to re-build the hash table in the case of collision = " + hashing.noCollision);
     }
     //search for element if existed, and it's location using O(1) time complexity
     //worst case complexity is O(n) if all collisions happen
-    public String lookUp(String value) {
+    public  String lookUp(String value) {
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
         if (exist[index] && Objects.equals(result[index], value)) {
