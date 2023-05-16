@@ -1,5 +1,4 @@
-import java.util.Objects;
-import java.util.Random;
+import java.util.*;
 
 public class Hashing {
     static final int U = 80;
@@ -18,7 +17,6 @@ public class Hashing {
 
     //batch insert
     void batchinsert(String[] s){
-
         String[] newS = new String[this.n+s.length];
         for(int i = 0; i < this.n; i++){
             newS[i] = S[i];
@@ -28,6 +26,8 @@ public class Hashing {
         }
         n=n+s.length;
         S = newS;
+        S = removeDuplicates(S);
+        n = S.length;
         if(s.length > 1){
         this.noCollision = -1;
             System.out.println("Performed Batch insert to " + s.length + " elements");
@@ -37,6 +37,27 @@ public class Hashing {
             System.out.println("Inserted " + s[0]);
         }
 
+    }
+
+
+    public static String[] removeDuplicates(String[] array) {
+        Set<String> uniqueSet = new HashSet<>(Arrays.asList(array));
+
+        String[] arrayWithoutDuplicates = new String[uniqueSet.size()];
+        uniqueSet.toArray(arrayWithoutDuplicates);
+
+        return arrayWithoutDuplicates;
+    }
+
+    void insertElement(String s){
+        String[] newS = new String[this.n+ 1];
+        for(int i = 0; i < this.n; i++){
+            newS[i] = S[i];
+        }
+
+        newS[this.n] = s;
+        S = newS;
+        this.noCollision = -1;
     }
 
 
