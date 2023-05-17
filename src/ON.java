@@ -4,16 +4,12 @@ public class ON {
     public String[][] result;
     private int[][] h1fun;
     private int[][][] h2funs;
-    private int n;
-    private int notFound = 0;
-    private int alreadyExists = 0;
     private Hashing hash;
     private ArrayList<String>[] level1;
     public int order;
 
     public ON(Hashing h) {
         hash = h;
-        this.n = hash.n;
         sequance();
     }
 
@@ -22,25 +18,26 @@ public class ON {
         while (!acceptable())
             hashFunction();
         constructLevel2();
-        n = result.length;
+
     }
 
     private void hashFunction() {
-        h1fun = hash.randomH((int) Math.floor(Math.log(n) / Math.log(2)));
+        hash.n = hash.S.length;
+        h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
         constructLevel1(); // linked list is needed due to collision of level1
     }
 
     // make the level 1 hashing by putting each element in its place with collsion
     private ArrayList<String>[] constructLevel1() {
-        level1 = new ArrayList[this.n];
+        level1 = new ArrayList[hash.n];
         for (int i = 0; i < hash.S.length; i++) {
             int index = hash.hashCode(hash.S[i], h1fun);
             if (level1[index] == null) {
-                level1[index] = new ArrayList<String>();
-            }
-            if (level1[index].contains(hash.S[i]))
-                alreadyExists++;
-            else
+                {
+                    level1[index] = new ArrayList<String>();
+                    level1[index].add(hash.S[i]);
+                }
+            } else
                 level1[index].add(hash.S[i]);
         }
         return level1;
@@ -48,6 +45,7 @@ public class ON {
 
     // check that level 1 is acceptable
     private boolean acceptable() {
+        System.out.println("check acceptance");
         order = hash.S.length;
         int count = 0;
         for (int i = 0; i < level1.length; i++) {
@@ -58,7 +56,6 @@ public class ON {
 
         }
         if (count >= 5 * hash.S.length) {
-            n = hash.n;
             return false;
         }
 
@@ -69,9 +66,9 @@ public class ON {
 
     // make the level 2 hashing by making O(n^2) hashing for each cell
     private void constructLevel2() {
-        h2funs = new int[n][][];
-        result = new String[n][];
-        for (int i = 0; i < this.n; i++) {
+        h2funs = new int[hash.n][][];
+        result = new String[hash.n][];
+        for (int i = 0; i < hash.n; i++) {
             if (level1[i] != null) {
                 Hashing Hi = new Hashing(toArray(level1[i]));
                 ON2 sec = new ON2(Hi);
@@ -93,77 +90,62 @@ public class ON {
             if (s.equals(result[i][j]))
                 return true;
         }
-        notFound++;
         return false;
     }
 
     // delete
     public boolean delete(String s) {
-        int i = hash.hashCode(s, h1fun);
-        if (h2funs[i] != null) {
-            int j = hash.hashCode(s, h2funs[i]);
-            if (s.equals(result[i][j])) {
-                result[i][j] = null;
-                hash.S = remove(hash.S, s);
-                hash.n--;
-                sequance();
-                return true;
-            }
-        }
-        return false;
+        if (!search(s))
+            return false;
+        hash.S = remove(hash.S, s);
+        sequance();
+        return true;
     }
 
     // insert
     public boolean insert(String s) {
-        int i = hash.hashCode(s, h1fun);
-        // there is a collision in level 1
-        if (h2funs[i] != null) {
-            int j = hash.hashCode(s, h2funs[i]);
-            // level 2 is ready just insert
-            if (result[i][j] == null || result[i].length == 1) {
-                hash.n++;
-                hash.S = concat(hash.S, s);
-                level1[i].add(s);
-                if (!acceptable()) {
-                    sequance();
-                } else {
-                    result[i][j] = s;
-                }
+        if (search(s))
+            return false;
+        hash.n++;
+        hash.S = concat(hash.S, s);
+        sequance();
+        return true;
+    }
 
-                return true;
+    // batch delete
+    public String batchDelete(String[] s) {
+        int deleted = 0;
+        int notFound = 0;
+        for (String it : s) {
+            System.out.println("check existance");
+            if (searchArray(hash.S, it)) {
+                deleted++;
+                hash.S = remove(hash.S, it);
+            } else {
+                notFound++;
             }
-            // already exists
-            else if (result[i][j].equals(s))
-                return false;
-            // need rehash the same cell has another word
-            else {
-                hash.n++;
-                hash.S = concat(hash.S, s);
-                level1[i].add(s);
-                sequance();
-                return true;
-            }
-        } else {
-            hash.n++;
-            hash.S = concat(hash.S, s);
-            String[] temp = new String[1];
-            temp[0] = s;
-            Hashing Hi = new Hashing(temp);
-            ON2 sec = new ON2(Hi);
-            h2funs[i] = sec.H;
-            result[i] = sec.result;
-            return true;
         }
-
+        if (deleted != 0)
+            sequance();
+        return deleted + " items have been deleted successfully and " + notFound + " items not found";
     }
 
-    // statistics
-    public int getNotFound() {
-        return this.notFound;
-    }
+    // batch insert
+    public String batchInsert(String[] s) {
+        int added = 0;
+        int alreadyExists = 0;
+        for (String it : s) {
+            if (searchArray(hash.S, it)) {
+                alreadyExists++;
+            } else {
+                added++;
+                hash.S = concat(hash.S, it);
+            }
+        }
+        if (added != 0)
+            sequance();
+        return added + " items have been added successfully and " + alreadyExists + " already exists";
 
-    public int getAlreadyExists() {
-        return this.alreadyExists;
     }
 
     // auxilary functions
@@ -195,7 +177,7 @@ public class ON {
     }
 
     public void print() {
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < hash.n; i++) {
             if (result[i] != null) {
                 for (int j = 0; j < result[i].length; j++) {
                     if (result[i][j] != null)
@@ -208,4 +190,11 @@ public class ON {
         System.out.println("order is " + order + " size is " + hash.n);
     }
 
+    private boolean searchArray(String[] arr, String s) {
+        for (String it : arr) {
+            if (it.equals(s))
+                return true;
+        }
+        return false;
+    }
 }
