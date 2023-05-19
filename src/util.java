@@ -31,7 +31,7 @@ public class util {
     }
 
     public static void doDelete(Dictionary dict, String deleteString) {
-        System.out.println(dict.delete(deleteString));
+        //System.out.println(dict.delete(deleteString));
         prompt();
     }
 
