@@ -3,6 +3,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.List;
 
+import javax.print.FlavorException;
+
 public class ON_Dictionary implements Dictionary {
     private ON On_dictionary = null;
     private Hashing h = null;
@@ -33,11 +35,11 @@ public class ON_Dictionary implements Dictionary {
     }
 
     @Override
-    public String delete(String deleteString) {
+    public boolean delete(String deleteString) {
         if (On_dictionary.delete(deleteString))
-            return deleteString + " was found and deleted";
+            return true;
         else
-            return deleteString + " was not found";
+            return false;
     }
 
     @Override

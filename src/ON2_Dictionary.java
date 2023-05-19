@@ -18,9 +18,9 @@ public class ON2_Dictionary implements Dictionary {
     @Override
     public String insert(String insertString) {
         On2_dictionary.insert(insertString);
-        //On2_dictionary = new ON2(h);
+        // On2_dictionary = new ON2(h);
         On2_dictionary.print();
-        //return insertString + " inserted successfully";
+        // return insertString + " inserted successfully";
         return "";
     }
 
@@ -32,11 +32,13 @@ public class ON2_Dictionary implements Dictionary {
     @Override
     public boolean delete(String deleteString) {
         if (On2_dictionary.delete(deleteString)) {
-            //On2_dictionary = new ON2(h);
+            // On2_dictionary = new ON2(h);
             On2_dictionary.print();
-            System.out.println(deleteString + " was found and deleted"); return true;
-        } else{
-            System.out.println( deleteString + " was not found");return false;
+            System.out.println(deleteString + " was found and deleted");
+            return true;
+        } else {
+            System.out.println(deleteString + " was not found");
+            return false;
         }
 
     }
@@ -50,18 +52,17 @@ public class ON2_Dictionary implements Dictionary {
             return "File not found";
         }
         String[] array = lines.toArray(new String[0]);
-        if(h.n*h.n < array.length){
+        if (h.n * h.n < array.length) {
             return "No more space";
         }
         int size = On2_dictionary.batchInsertion(array);
-        if( size > h.n*h.n)
-        {
+        if (size > h.n * h.n) {
             return "No more space" + " N= " + h.n + ", Size= " + On2_dictionary.batchInsertion(array);
         }
         On2_dictionary = new ON2(h);
         On2_dictionary.print();
 
-        return "Batch insertion finished, Total Number of elements= "+ size;
+        return "Batch insertion finished, Total Number of elements= " + size;
     }
 
     @Override
@@ -75,11 +76,12 @@ public class ON2_Dictionary implements Dictionary {
         String[] array = lines.toArray(new String[0]);
         int deletions = 0;
         for (int i = 0; i < array.length; i++) {
-            if(On2_dictionary.delete(array[i])){
+            if (On2_dictionary.delete(array[i])) {
                 deletions++;
-            };
+            }
+            ;
         }
-        //On2_dictionary = new ON2(h);
+        // On2_dictionary = new ON2(h);
         On2_dictionary.print();
         return "Batch deletion finished, Deleted: " + deletions;
     }

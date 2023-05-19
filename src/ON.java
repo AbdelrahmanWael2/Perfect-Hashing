@@ -10,16 +10,17 @@ public class ON {
 
     public ON(Hashing h) {
         hash = h;
+        h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
         sequance();
     }
 
     private void sequance() {
-        h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
         constructLevel1();
-        while (!acceptable())
+        while (!acceptable()) {
+            h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
             constructLevel1();
+        }
         constructLevel2();
-
     }
 
     // make the level 1 hashing by putting each element in its place with collsion
@@ -66,6 +67,7 @@ public class ON {
         for (int i = 0; i < hash.n; i++) {
             if (level1[i] != null) {
                 Hashing Hi = new Hashing(level1[i].size());
+                Hi.batchinsert(toArray(level1[i]));
                 ON2 sec = new ON2(Hi);
                 h2funs[i] = sec.H;
                 for (int j = 0; j < sec.result.length; j++) {
@@ -111,7 +113,7 @@ public class ON {
         int deleted = 0;
         int notFound = 0;
         for (String it : s) {
-            System.out.println("check existance");
+            // System.out.println("check existance");
             if (searchArray(hash.S, it)) {
                 deleted++;
                 hash.S = remove(hash.S, it);

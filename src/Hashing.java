@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Hashing {
     static final int U = 80;
-    static int n;
+    int n;
     String[] S = new String[0];
     int noCollision;
 
@@ -45,7 +45,7 @@ public class Hashing {
 
         newS[S.length] = s;
         S = newS;
-        //this.noCollision = -1;
+        // this.noCollision = -1;
     }
 
     void deleteElement(String value) {
