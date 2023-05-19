@@ -7,6 +7,7 @@ public class ON {
     private Hashing hash;
     private ArrayList<String>[] level1;
     public int order;
+    public int rehash = 0;
 
     public ON(Hashing h) {
         hash = h;
@@ -15,8 +16,10 @@ public class ON {
     }
 
     private void sequance() {
+        rehash = 0;
         constructLevel1();
         while (!acceptable()) {
+            rehash++;
             h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
             constructLevel1();
         }
@@ -41,21 +44,17 @@ public class ON {
 
     // check that level 1 is acceptable
     private boolean acceptable() {
-        System.out.println("check acceptance");
-        order = hash.S.length;
-        int count = 0;
+        // System.out.println("check acceptance");
+        order = 0;
         for (int i = 0; i < level1.length; i++) {
             if (level1[i] != null) {
-                count += (int) Math.pow(level1[i].size(), 2);
-                order += level1[i].size();
+                order += (int) Math.pow(level1[i].size(), 2);
             }
 
         }
-        if (count > 5 * hash.S.length) {
+        if (order > 3 * hash.S.length) {
             return false;
-        }
-
-        else {
+        } else {
             return true;
         }
     }
@@ -96,6 +95,7 @@ public class ON {
             return false;
         hash.S = remove(hash.S, s);
         sequance();
+        System.out.println("number of level 2 cells = " + order + " rehashing number = " + rehash);
         return true;
     }
 
@@ -105,6 +105,7 @@ public class ON {
             return false;
         hash.insertElement(s);
         sequance();
+        System.out.println("number of level 2 cells = " + order + " rehashing number = " + rehash);
         return true;
     }
 
@@ -123,7 +124,8 @@ public class ON {
         }
         if (deleted != 0)
             sequance();
-        return deleted + " items have been deleted successfully and " + notFound + " items not found";
+        return deleted + " items have been deleted successfully and " + notFound
+                + " items not found, number of level 2 cells = " + order + " rehashing number = " + rehash;
     }
 
     // batch insert
@@ -132,7 +134,8 @@ public class ON {
         int added = s.length - alreadyExists;
         if (added != 0)
             sequance();
-        return added + " items have been added successfully and " + alreadyExists + " already exists";
+        return added + " items have been added successfully and " + alreadyExists
+                + " already exists, number of level 2 cells = " + order + " rehashing number = " + rehash;
 
     }
 
