@@ -3,42 +3,30 @@ import java.util.*;
 public class Hashing {
     static final int U = 80;
     int n;
-    String[] S;
+    String[] S = new String[0];
     int noCollision;
 
-
-
-
-    Hashing(String[] s){
-        this.n = s.length;
-        this.S = s;
+    Hashing(int n) {
+        this.n = n;
         this.noCollision = -1;
     }
 
-    //batch insert
-    void batchinsert(String[] s){
-        String[] newS = new String[this.n+s.length];
-        for(int i = 0; i < this.n; i++){
+    // batch insert
+    int batchinsert(String[] s) {
+        String[] newS = new String[S.length + s.length];
+        for (int i = 0; i < S.length; i++) {
             newS[i] = S[i];
         }
-        for(int j = this.n; j < this.n + s.length; j++){
-            newS[j] = s[j- this.n];
+        for (int j = S.length; j < newS.length; j++) {
+            newS[j] = s[j - S.length];
         }
-        n=n+s.length;
         S = newS;
+        int oldSize = S.length;
         S = removeDuplicates(S);
-        n = S.length;
-        if(s.length > 1){
-        this.noCollision = -1;
-            System.out.println("Performed Batch insert to " + s.length + " elements");
-        }
-        else{
-            this.noCollision++;
-            System.out.println("Inserted " + s[0]);
-        }
+        int newSize = S.length;
+        return oldSize - newSize;
 
     }
-
 
     public static String[] removeDuplicates(String[] array) {
         Set<String> uniqueSet = new HashSet<>(Arrays.asList(array));
@@ -49,9 +37,9 @@ public class Hashing {
         return arrayWithoutDuplicates;
     }
 
-    void insertElement(String s){
-        String[] newS = new String[this.n+ 1];
-        for(int i = 0; i < this.n; i++){
+    void insertElement(String s) {
+        String[] newS = new String[this.n + 1];
+        for (int i = 0; i < this.n; i++) {
             newS[i] = S[i];
         }
 
@@ -59,8 +47,6 @@ public class Hashing {
         S = newS;
         this.noCollision = -1;
     }
-
-
 
     void deleteElement(String value) {
         int indexToDelete = -1;
@@ -82,7 +68,6 @@ public class Hashing {
         S[S.length - 1] = null; // remove last element
     }
 
-
     // generate random H
     public int[][] randomH(int b) {
         int[][] H = new int[b][U];
@@ -97,10 +82,10 @@ public class Hashing {
     }
 
     // convert the result from the multiplication to decimal
-    public int convertToDecimal(int[] bin){
-        int val=0;
-        for(int i=0;i < bin.length;i++)
-            val+=bin[i]*Math.pow(2,i);
+    public int convertToDecimal(int[] bin) {
+        int val = 0;
+        for (int i = 0; i < bin.length; i++)
+            val += bin[i] * Math.pow(2, i);
         return val;
     }
 
@@ -115,16 +100,13 @@ public class Hashing {
                 b <<= 1;
             }
         }
-        if (bytes.length < U/8) {
+        if (bytes.length < U / 8) {
             for (int i = bytes.length * 8; i < U; i++) {
                 bin[i] = 0;
             }
         }
         return bin;
     }
-
-
-
 
     // multiply the input string with the 2D array of integers H
     public int[] multiply(int[][] H, String str) {
@@ -146,10 +128,9 @@ public class Hashing {
     }
 
     // compute the hash code for a given string using the multiplication method
-    //leave this for now probably won't use it
+    // leave this for now probably won't use it
     public int hashCode(String str, int[][] H) {
         int[] result = multiply(H, str);
         return convertToDecimal(result);
     }
 }
-

@@ -14,17 +14,12 @@ public class ON {
     }
 
     private void sequance() {
-        hashFunction();
+        h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
+        constructLevel1();
         while (!acceptable())
-            hashFunction();
+            constructLevel1();
         constructLevel2();
 
-    }
-
-    private void hashFunction() {
-        hash.n = hash.S.length;
-        h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
-        constructLevel1(); // linked list is needed due to collision of level1
     }
 
     // make the level 1 hashing by putting each element in its place with collsion
@@ -55,7 +50,7 @@ public class ON {
             }
 
         }
-        if (count >= 5 * hash.S.length) {
+        if (count > 5 * hash.S.length) {
             return false;
         }
 
@@ -70,7 +65,7 @@ public class ON {
         result = new String[hash.n][];
         for (int i = 0; i < hash.n; i++) {
             if (level1[i] != null) {
-                Hashing Hi = new Hashing(toArray(level1[i]));
+                Hashing Hi = new Hashing(level1[i].size());
                 ON2 sec = new ON2(Hi);
                 h2funs[i] = sec.H;
                 for (int j = 0; j < sec.result.length; j++) {
@@ -106,8 +101,7 @@ public class ON {
     public boolean insert(String s) {
         if (search(s))
             return false;
-        hash.n++;
-        hash.S = concat(hash.S, s);
+        hash.insertElement(s);
         sequance();
         return true;
     }
@@ -132,16 +126,8 @@ public class ON {
 
     // batch insert
     public String batchInsert(String[] s) {
-        int added = 0;
-        int alreadyExists = 0;
-        for (String it : s) {
-            if (searchArray(hash.S, it)) {
-                alreadyExists++;
-            } else {
-                added++;
-                hash.S = concat(hash.S, it);
-            }
-        }
+        int alreadyExists = hash.batchinsert(s);
+        int added = s.length - alreadyExists;
         if (added != 0)
             sequance();
         return added + " items have been added successfully and " + alreadyExists + " already exists";
@@ -157,14 +143,14 @@ public class ON {
         return ans;
     }
 
-    private String[] concat(String[] old, String s) {
-        String[] newArr = new String[old.length + 1];
-        for (int i = 0; i < old.length; i++) {
-            newArr[i] = old[i];
-        }
-        newArr[old.length] = s;
-        return newArr;
-    }
+    // private String[] concat(String[] old, String s) {
+    // String[] newArr = new String[old.length + 1];
+    // for (int i = 0; i < old.length; i++) {
+    // newArr[i] = old[i];
+    // }
+    // newArr[old.length] = s;
+    // return newArr;
+    // }
 
     private String[] remove(String[] old, String s) {
         String[] newArr = new String[old.length - 1];

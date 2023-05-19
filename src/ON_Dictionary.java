@@ -7,11 +7,12 @@ public class ON_Dictionary implements Dictionary {
     private ON On_dictionary = null;
     private Hashing h = null;
 
-    public ON_Dictionary() {
-        String[] arr = new String[2];
-        arr[0] = "dummy1";
-        arr[1] = "dummy2";
-        h = new Hashing(arr);
+    public ON_Dictionary(int n) {
+        // String[] arr = new String[2];
+        // arr[0] = "dummy1";
+        // arr[1] = "dummy2";
+
+        h = new Hashing(n);
         On_dictionary = new ON(h);
     }
 
