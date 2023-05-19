@@ -7,6 +7,7 @@ public class ON2 {
     boolean[] exist;
     int b;
     int n;
+    int size = 0;
     Hashing hashing;
 
     public ON2(Hashing hash) {
@@ -62,10 +63,12 @@ public class ON2 {
                     hashed = false;
                     Arrays.fill(exist, false);
                     Arrays.fill(result, "");
+                    size = 0;
 
                     break;
                 } else {
                     result[index] = s[i];
+                    size++;
                     exist[index] = true;
 
                 }
@@ -80,8 +83,14 @@ public class ON2 {
         boolean Hashed = false;
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
-        if (Objects.equals(result[index], value)) {
+        System.out.println("N= "+hashing.n + " Size= " + size);
+        if(hashing.n * hashing.n <= size){
+            System.out.println("No more space in table");
             return;
+        }
+        if (Objects.equals(result[index], value)) {
+            System.out.println("Already Exists");
+             return;
         }
         if (exist[index]) {
             String[] s = new String[1];
@@ -93,14 +102,15 @@ public class ON2 {
             System.out.println("Failed to hash directly");
         } else {
             result[index] = value;
+            size++;
             exist[index] = true;
             hashing.insertElement(value);
 
-            System.out.println("Hashed Directly");
+            System.out.println("Hashed " + value + " Directly");
         }
     }
 
-    void batchInsertion(String[] s) {
+    int batchInsertion(String[] s) {
         for (int i = 0; i < s.length; i++) {
             int[] indexBinary = hashing.multiply(H, s[i]);
             int index = hashing.convertToDecimal(indexBinary);
@@ -109,8 +119,8 @@ public class ON2 {
             }
         }
 
-        hashing.batchinsert(s);
-
+        size = size + s.length - hashing.batchinsert(s);
+        return size;
     }
 
     public int noOfHashFuns() {
@@ -142,6 +152,7 @@ public class ON2 {
         }
 
         System.out.println("Number to re-build the hash table in the case of collision = " + hashing.noCollision);
+        hashing.noCollision = 0;
     }
 
     // search for element if existed, and it's location using O(1) time complexity
@@ -162,7 +173,8 @@ public class ON2 {
         if (exist[index] && Objects.equals(result[index], value)) {
             exist[index] = false;
             result[index] = null;
-            hashing.n--;
+            //size--;
+            //hashing.n--;
             hashing.deleteElement(value);
             return true;
         } else {
