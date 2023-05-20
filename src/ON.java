@@ -7,136 +7,118 @@ public class ON {
     private Hashing hash;
     private ArrayList<String>[] level1;
     public int order;
-    public int rehash = 0;
+    public int rehashnum = 0;
 
     public ON(Hashing h) {
         hash = h;
         h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
-        sequance();
-    }
-
-    private void sequance() {
-        rehash = 0;
-        constructLevel1();
-        while (!acceptable()) {
-            rehash++;
-            h1fun = hash.randomH((int) Math.floor(Math.log(hash.n) / Math.log(2)));
-            constructLevel1();
-        }
-        constructLevel2();
-    }
-
-    // make the level 1 hashing by putting each element in its place with collsion
-    private ArrayList<String>[] constructLevel1() {
+        h2funs = new int[hash.n][][];
+        result = new String[hash.n][];
         level1 = new ArrayList[hash.n];
-        for (int i = 0; i < hash.S.length; i++) {
-            int index = hash.hashCode(hash.S[i], h1fun);
-            if (level1[index] == null) {
-                {
-                    level1[index] = new ArrayList<String>();
-                    level1[index].add(hash.S[i]);
-                }
-            } else
-                level1[index].add(hash.S[i]);
-        }
-        return level1;
     }
 
-    // check that level 1 is acceptable
-    private boolean acceptable() {
-        // System.out.println("check acceptance");
-        order = 0;
-        for (int i = 0; i < level1.length; i++) {
-            if (level1[i] != null) {
-                order += (int) Math.pow(level1[i].size(), 2);
-            }
-
+    // search
+    private String getIndex(String s) {
+        int i = hash.hashCode(s, h1fun);
+        int j = -1;
+        if (h2funs[i] != null) {
+            j = hash.hashCode(s, h2funs[i]);
         }
-        if (order > 3 * hash.S.length) {
-            return false;
+        return i + "$" + j;
+    }
+
+    public String search(String s) {
+        String[] arr = getIndex(s).split("\\$");
+        int i = Integer.parseInt(arr[0]);
+        int j = Integer.parseInt(arr[1]);
+        if (j == -1)
+            return s + " not found";
+        else {
+            if (result[i][j] == null)
+                return s + " not found";
+            else
+                return s + " found at level1 index = " + arr[0] + " level2 index = " + arr[1];
+        }
+
+    }
+
+    private void rehash(int i) {
+        Hashing Hi = new Hashing(level1[i].size());
+        Hi.batchinsert(toArray(level1[i]));
+        ON2 sec = new ON2(Hi);
+        h2funs[i] = sec.H;
+        for (int j = 0; j < sec.result.length; j++) {
+            if (sec.result[j] == "")
+                sec.result[j] = null;
+        }
+        result[i] = sec.result;
+    }
+
+    // insert
+    public boolean insert(String myStr) {
+        String[] arr = getIndex(myStr).split("\\$");
+        int i = Integer.parseInt(arr[0]);
+        int j = Integer.parseInt(arr[1]);
+        if (j != -1) // already exists or collision needs rehash or ready to accept
+        {
+            if (result[i][j] == null) {
+                level1[i].add(myStr);
+                result[i][j] = myStr;
+                return true;
+            } else if (!result[i][j].equals(myStr)) // collision
+            {
+                order -= (level1[i].size() * level1[i].size());
+                level1[i].add(myStr);
+                rehash(i);
+                order += (level1[i].size() * level1[i].size());
+                rehashnum++;
+                return true;
+            } else {
+                return false;
+            }
         } else {
+            level1[i] = new ArrayList<String>();
+            level1[i].add(myStr);
+            order += (level1[i].size() * level1[i].size());
+            rehash(i);
             return true;
         }
     }
 
-    // make the level 2 hashing by making O(n^2) hashing for each cell
-    private void constructLevel2() {
-        h2funs = new int[hash.n][][];
-        result = new String[hash.n][];
-        for (int i = 0; i < hash.n; i++) {
-            if (level1[i] != null) {
-                Hashing Hi = new Hashing(level1[i].size());
-                Hi.batchinsert(toArray(level1[i]));
-                ON2 sec = new ON2(Hi);
-                h2funs[i] = sec.H;
-                for (int j = 0; j < sec.result.length; j++) {
-                    if (sec.result[j] == "")
-                        sec.result[j] = null;
-                }
-                result[i] = sec.result;
-            }
-        }
-    }
-
-    // search
-    public boolean search(String s) {
-        int i = hash.hashCode(s, h1fun);
-        if (h2funs[i] != null) {
-            int j = hash.hashCode(s, h2funs[i]);
-            if (s.equals(result[i][j]))
-                return true;
-        }
-        return false;
-    }
-
     // delete
-    public boolean delete(String s) {
-        if (!search(s))
+    public boolean delete(String myStr) {
+        String[] arr = getIndex(myStr).split("\\$");
+        int i = Integer.parseInt(arr[0]);
+        int j = Integer.parseInt(arr[1]);
+        if (j == -1)
             return false;
-        hash.S = remove(hash.S, s);
-        sequance();
-        System.out.println("number of level 2 cells = " + order + " rehashing number = " + rehash);
-        return true;
-    }
-
-    // insert
-    public boolean insert(String s) {
-        if (search(s))
-            return false;
-        hash.insertElement(s);
-        sequance();
-        System.out.println("number of level 2 cells = " + order + " rehashing number = " + rehash);
-        return true;
-    }
-
-    // batch delete
-    public String batchDelete(String[] s) {
-        int deleted = 0;
-        int notFound = 0;
-        for (String it : s) {
-            // System.out.println("check existance");
-            if (searchArray(hash.S, it)) {
-                deleted++;
-                hash.S = remove(hash.S, it);
-            } else {
-                notFound++;
+        else {
+            if (result[i][j] == null)
+                return false;
+            else {
+                result[i][j] = null;
+                return true;
             }
+
         }
-        if (deleted != 0)
-            sequance();
-        return deleted + " items have been deleted successfully and " + notFound
-                + " items not found, number of level 2 cells = " + order + " rehashing number = " + rehash;
     }
 
-    // batch insert
-    public String batchInsert(String[] s) {
-        int alreadyExists = hash.batchinsert(s);
-        int added = s.length - alreadyExists;
-        if (added != 0)
-            sequance();
-        return added + " items have been added successfully and " + alreadyExists
-                + " already exists, number of level 2 cells = " + order + " rehashing number = " + rehash;
+    // batch insert and delete
+    public String batchDelete(String[] arr) {
+        int deleteed = 0;
+        for (String it : arr)
+            if (delete(it))
+                deleteed++;
+        return deleteed + " items deleted " + (arr.length - deleteed) + " items not exist";
+    }
 
+    public String batchInsert(String[] arr) {
+        int added = 0;
+        for (String it : arr)
+            if (insert(it))
+                added++;
+        return added + " items added and " + (arr.length - added) + " not exist" + ", num of cells in level2 = "
+                + order;
     }
 
     // auxilary functions
@@ -157,35 +139,35 @@ public class ON {
     // return newArr;
     // }
 
-    private String[] remove(String[] old, String s) {
-        String[] newArr = new String[old.length - 1];
-        int count = 0;
-        for (int i = 0; i < old.length; i++) {
-            if (!old[i].equals(s))
-                newArr[count++] = old[i];
-        }
-        return newArr;
-    }
+    // private String[] remove(String[] old, String s) {
+    // String[] newArr = new String[old.length - 1];
+    // int count = 0;
+    // for (int i = 0; i < old.length; i++) {
+    // if (!old[i].equals(s))
+    // newArr[count++] = old[i];
+    // }
+    // return newArr;
+    // }
 
-    public void print() {
-        for (int i = 0; i < hash.n; i++) {
-            if (result[i] != null) {
-                for (int j = 0; j < result[i].length; j++) {
-                    if (result[i][j] != null)
-                        System.out.print(result[i][j] + " ");
-                }
-                System.out.println();
-            }
+    // public void print() {
+    // for (int i = 0; i < hash.n; i++) {
+    // if (result[i] != null) {
+    // for (int j = 0; j < result[i].length; j++) {
+    // if (result[i][j] != null)
+    // System.out.print(result[i][j] + " ");
+    // }
+    // System.out.println();
+    // }
 
-        }
-        System.out.println("order is " + order + " size is " + hash.n);
-    }
+    // }
+    // System.out.println("order is " + order + " size is " + hash.n);
+    // }
 
-    private boolean searchArray(String[] arr, String s) {
-        for (String it : arr) {
-            if (it.equals(s))
-                return true;
-        }
-        return false;
-    }
+    // private boolean searchArray(String[] arr, String s) {
+    // for (String it : arr) {
+    // if (it.equals(s))
+    // return true;
+    // }
+    // return false;
+    // }
 }

@@ -21,17 +21,14 @@ public class ON_Dictionary implements Dictionary {
     @Override
     public String insert(String insertString) {
         if (On_dictionary.insert(insertString))
-            return insertString + " inserted successfully";
+            return insertString + " inserted successfully" + ", num of cells in level2 = " + On_dictionary.order;
         else
             return insertString + " already exists";
     }
 
     @Override
     public String search(String searchString) {
-        if (On_dictionary.search(searchString))
-            return searchString + " was found";
-        else
-            return searchString + " was not found";
+        return On_dictionary.search(searchString);
     }
 
     @Override
