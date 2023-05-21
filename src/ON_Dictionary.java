@@ -21,7 +21,9 @@ public class ON_Dictionary implements Dictionary {
     @Override
     public String insert(String insertString) {
         if (On_dictionary.insert(insertString))
-            return insertString + " inserted successfully" + ", num of cells in level2 = " + On_dictionary.order;
+            return insertString + " inserted successfully";
+        // return insertString + " inserted successfully" + ", num of cells in level2 =
+        // " + On_dictionary.order;
         else
             return insertString + " already exists";
     }

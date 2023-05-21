@@ -37,7 +37,9 @@ public class ON {
             if (result[i][j] == null)
                 return s + " not found";
             else
-                return s + " found at level1 index = " + arr[0] + " level2 index = " + arr[1];
+                return s + " found successfully";
+            // return s + " found at level1 index = " + arr[0] + " level2 index = " +
+            // arr[1];
         }
 
     }
@@ -117,8 +119,10 @@ public class ON {
         for (String it : arr)
             if (insert(it))
                 added++;
-        return added + " items added and " + (arr.length - added) + " not exist" + ", num of cells in level2 = "
-                + order;
+        return added + " items added and " + (arr.length - added) + " not exist";
+        // return added + " items added and " + (arr.length - added) + " not exist" + ",
+        // num of cells in level2 = "
+        // + order;
     }
 
     // auxilary functions
