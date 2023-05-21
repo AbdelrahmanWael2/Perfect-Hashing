@@ -36,8 +36,10 @@ public class ON {
         else {
             if (result[i][j] == null)
                 return s + " not found";
-            else
+            else if (result[i][j].equals(s))
                 return s + " found successfully";
+            else
+                return s + " not found";
             // return s + " found at level1 index = " + arr[0] + " level2 index = " +
             // arr[1];
         }
