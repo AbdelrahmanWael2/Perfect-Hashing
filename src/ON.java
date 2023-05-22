@@ -99,10 +99,11 @@ public class ON {
         else {
             if (result[i][j] == null)
                 return false;
-            else {
+            else if (result[i][j].equals(myStr)) {
                 result[i][j] = null;
                 return true;
-            }
+            } else
+                return false;
 
         }
     }
