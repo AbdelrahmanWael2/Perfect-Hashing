@@ -37,11 +37,11 @@ class ON_DictionaryTest {
         ON_Dictionary d1 = new ON_Dictionary(1000000);
 
         assertEquals("8 items added and 999992 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
         assertEquals("0 items added and 1000000 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
         assertEquals("1000000 items added and 0 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2.txt"));
 
     }
 
@@ -49,11 +49,11 @@ class ON_DictionaryTest {
     void batchDelete() throws IOException {
         ON_Dictionary d1 = new ON_Dictionary(1000000);
         assertEquals("1000000 items added and 0 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2.txt"));
         assertEquals("1000000 items deleted 0 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2.txt"));
         assertEquals("0 items deleted 1000000 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
 
     }
 
@@ -73,14 +73,14 @@ class ON_DictionaryTest {
         assertEquals(false, d1.delete("Ali"));
         assertEquals("Ali not found", d1.search("Ali"));
         assertEquals("0 items deleted 1000000 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
         assertEquals("8 items added and 999992 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
         assertEquals("1000000 items added and 0 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2.txt"));
         assertEquals(true, d1.delete("mango"));
         assertEquals("7 items deleted 999993 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test.txt"));
     }
 
     // small files to batch insert and delete from it then batch delete it
@@ -88,7 +88,7 @@ class ON_DictionaryTest {
     void test3() throws IOException {
         ON_Dictionary d1 = new ON_Dictionary(6);
         assertEquals("5 items added and 3 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         // deleted element from the 5 then we batch delete the file we will see that 4
         // items is deleted only not file
         assertEquals(true, d1.delete("magdy"));
@@ -96,7 +96,7 @@ class ON_DictionaryTest {
         assertEquals("magdy not found", d1.search("magdy"));
         assertEquals("raffek found successfully", d1.search("raffek"));
         assertEquals("4 items deleted 4 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
     }
 
     // small batch insert then insert on the current table then batch delete
@@ -104,7 +104,7 @@ class ON_DictionaryTest {
     void test4() throws IOException {
         ON_Dictionary d1 = new ON_Dictionary(6);
         assertEquals("5 items added and 3 not exist",
-                d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
+                d1.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("belal inserted successfully", d1.insert("belal"));
         assertEquals("belal found successfully", d1.search("belal"));
         assertEquals("magdy already exists", d1.insert("magdy"));
@@ -121,11 +121,11 @@ class ON_DictionaryTest {
         ON_Dictionary d1 = new ON_Dictionary(6);
         assertEquals("magdy inserted successfully", d1.insert("magdy"));
         assertEquals("1 items deleted 7 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("magdy not found", d1.search("magdy"));
         assertEquals("Ali inserted successfully", d1.insert("Ali"));
         assertEquals("0 items deleted 8 items not exist",
-                d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
+                d1.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("Ali found successfully", d1.search("Ali"));
 
     }

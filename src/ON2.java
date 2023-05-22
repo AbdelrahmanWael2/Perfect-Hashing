@@ -79,18 +79,18 @@ public class ON2 {
         }
     }
 
-    void insert(String value) {
+    boolean insert(String value) {
         boolean Hashed = false;
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
         System.out.println("N= "+hashing.n + " Size= " + size);
         if(hashing.n * hashing.n <= size){
             System.out.println("No more space in table");
-            return;
+            return false;
         }
         if (Objects.equals(result[index], value)) {
             System.out.println("Already Exists");
-             return;
+             return false;
         }
         if (exist[index]) {
             String[] s = new String[1];
@@ -108,19 +108,18 @@ public class ON2 {
 
             System.out.println("Hashed " + value + " Directly");
         }
+        return true;
     }
 
-    int batchInsertion(String[] s) {
-        for (int i = 0; i < s.length; i++) {
-            int[] indexBinary = hashing.multiply(H, s[i]);
-            int index = hashing.convertToDecimal(indexBinary);
-            if (Objects.equals(result[index], s[i])) {
-                result[index] = null;
-            }
-        }
-
-        size = size + s.length - hashing.batchinsert(s);
-        return size;
+    public String batchInsert(String[] arr) {
+        int added = 0;
+        for (String it : arr)
+            if (insert(it))
+                added++;
+        return added + " items added and " + (arr.length - added) + " not exist";
+        // return added + " items added and " + (arr.length - added) + " not exist" + ",
+        // num of cells in level2 = "
+        // + order;
     }
 
     public int noOfHashFuns() {
@@ -136,7 +135,7 @@ public class ON2 {
     public void print() {
 
         n = hashing.n;
-        String filePath = "src/Output.txt";
+        String filePath = "C:/Users/moham/Desktop/Perfect-Hashing/src/Output.txt";
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true));
             clearFileContents(filePath);
@@ -161,9 +160,9 @@ public class ON2 {
         int[] indexBinary = hashing.multiply(H, value);
         int index = hashing.convertToDecimal(indexBinary);
         if (exist[index] && Objects.equals(result[index], value)) {
-            return "String \"" + value + "\"  found at index " + index;
+            return value + " found successfully";
         } else {
-            return "String \"" + value + "\" not found !!";
+            return value + " not found";
         }
     }
 

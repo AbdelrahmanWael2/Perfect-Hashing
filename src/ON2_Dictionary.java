@@ -19,12 +19,14 @@ public class ON2_Dictionary implements Dictionary {
 
     @Override
     public String insert(String insertString) {
-        On2_dictionary.insert(insertString);
+        if (On2_dictionary.insert(insertString))
+            return insertString + " inserted successfully";
+        else
+            return insertString + " already exists";
         // On2_dictionary = new ON2(h);
-        On2_dictionary.print();
+        // On2_dictionary.print();
         // return insertString + " inserted successfully";
-        System.out.println("Size = " + countLines());
-        return "";
+        // System.out.println("Size = " + countLines());
     }
 
     @Override
@@ -56,17 +58,10 @@ public class ON2_Dictionary implements Dictionary {
             return "File not found";
         }
         String[] array = lines.toArray(new String[0]);
-        if (h.n * h.n < array.length) {
-            return "No more space";
-        }
-        int size = On2_dictionary.batchInsertion(array);
-        if (size > h.n * h.n) {
-            return "No more space" + " N= " + h.n + ", Size= " + On2_dictionary.batchInsertion(array);
-        }
-        On2_dictionary = new ON2(h);
-        On2_dictionary.print();
-        System.out.println("Size = " + countLines());
-        return "Batch insertion finished, Total Number of elements= " + size;
+        // for(int i = 0; i < array.length; i++) {
+        // On_dictionary.insert(array[i]);
+        // }
+        return On2_dictionary.batchInsert(array);
     }
 
     @Override
@@ -83,12 +78,11 @@ public class ON2_Dictionary implements Dictionary {
             if (On2_dictionary.delete(array[i])) {
                 deletions++;
             }
-            ;
         }
         // On2_dictionary = new ON2(h);
         On2_dictionary.print();
         System.out.println("Size = " + countLines());
-        return "Batch deletion finished, Deleted: " + deletions;
+        return deletions + " items deleted " + (array.length - deletions) + " items not exist";
     }
 
 
@@ -96,7 +90,7 @@ public class ON2_Dictionary implements Dictionary {
 
     public static int countLines() {
         int lineCount = 0;
-        String filePath = "src/Output.txt";
+        String filePath = "C:/Users/moham/Desktop/Perfect-Hashing/src/Output.txt";
         System.out.println("Number of lines in the file: " + lineCount);
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             while (reader.readLine() != null) {

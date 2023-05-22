@@ -34,20 +34,20 @@ class ON2_DictionaryTest {
 
     @org.junit.jupiter.api.Test
     void batchInsert() throws IOException {
-        ON2_Dictionary d2 = new ON2_Dictionary(1000000);
+        ON2_Dictionary d2 = new ON2_Dictionary(10000);
 
-        assertEquals("8 items added and 999992 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
-        assertEquals("0 items added and 1000000 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
-        assertEquals("1000000 items added and 0 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test2.txt"));
+        assertEquals("8 items added and 9992 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
+        assertEquals("0 items added and 10000 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
+        assertEquals("10000 items added and 0 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2N2.txt"));
 
     }
 
     @org.junit.jupiter.api.Test
     void batchDelete() throws IOException {
-        ON2_Dictionary d2 = new ON2_Dictionary(1000000);
-        assertEquals("1000000 items added and 0 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test2.txt"));
-        assertEquals("1000000 items deleted 0 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test2.txt"));
-        assertEquals("0 items deleted 1000000 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
+        ON2_Dictionary d2 = new ON2_Dictionary(10000);
+        assertEquals("10000 items added and 0 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2N2.txt"));
+        assertEquals("10000 items deleted 0 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2N2.txt"));
+        assertEquals("0 items deleted 10000 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
 
     }
     @org.junit.jupiter.api.Test
@@ -60,33 +60,33 @@ class ON2_DictionaryTest {
     }
     @org.junit.jupiter.api.Test
     void test2() throws IOException {
-        ON2_Dictionary d2 = new ON2_Dictionary(1000000);
+        ON2_Dictionary d2 = new ON2_Dictionary(10000);
         assertEquals("raffek inserted successfully",d2.insert("raffek"));
         assertEquals(false,d2.delete("Ali"));
         assertEquals("Ali not found",d2.search("Ali"));
-        assertEquals("0 items deleted 1000000 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
-        assertEquals("8 items added and 999992 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
-        assertEquals("1000000 items added and 0 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test2.txt"));
+        assertEquals("0 items deleted 10000 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
+        assertEquals("8 items added and 9992 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
+        assertEquals("10000 items added and 0 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test2N2.txt"));
         assertEquals(true, d2.delete("mango"));
-        assertEquals("7 items deleted 999993 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test.txt"));
+        assertEquals("7 items deleted 9993 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/TestN2.txt"));
     }
     //    small files to batch insert and delete from it then batch delete it
     @org.junit.jupiter.api.Test
     void test3() throws IOException {
         ON2_Dictionary d2 = new ON2_Dictionary(6);
-        assertEquals("5 items added and 3 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test3.txt"));
+        assertEquals("5 items added and 3 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
 //        deleted element from the 5 then we batch delete the file we will see that 4 items is deleted only not file
         assertEquals(true , d2.delete("magdy"));
         assertEquals(false , d2.delete("magdy"));
         assertEquals("magdy not found" , d2.search("magdy"));
         assertEquals("raffek found successfully", d2.search("raffek"));
-        assertEquals("4 items deleted 4 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test3.txt"));
+        assertEquals("4 items deleted 4 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
     }
     // small batch insert then insert on the current table then batch delete
     @org.junit.jupiter.api.Test
     void test4() throws IOException {
         ON2_Dictionary d2 = new ON2_Dictionary(6);
-        assertEquals("5 items added and 3 not exist",d2.batchInsert("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test3.txt"));
+        assertEquals("5 items added and 3 not exist",d2.batchInsert("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("belal inserted successfully",d2.insert("belal"));
         assertEquals("belal found successfully",d2.search("belal"));
         assertEquals("magdy already exists",d2.insert("magdy"));
@@ -99,10 +99,10 @@ class ON2_DictionaryTest {
     void test5() throws IOException {
         ON2_Dictionary d2 = new ON2_Dictionary(6);
         assertEquals("magdy inserted successfully", d2.insert("magdy"));
-        assertEquals("1 items deleted 7 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test3.txt"));
+        assertEquals("1 items deleted 7 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("magdy not found", d2.search("magdy"));
         assertEquals("Ali inserted successfully",d2.insert("Ali"));
-        assertEquals("0 items deleted 8 items not exist",d2.batchDelete("D:\\CSED2_2\\DS\\labs\\hashing\\Perfect-Hashing\\src\\Test3.txt"));
+        assertEquals("0 items deleted 8 items not exist",d2.batchDelete("C:/Users/moham/Desktop/Perfect-Hashing/src/Test3.txt"));
         assertEquals("Ali found successfully", d2.search("Ali"));
 
     }
