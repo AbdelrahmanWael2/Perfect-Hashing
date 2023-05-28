@@ -122,7 +122,7 @@ public class ON {
         for (String it : arr)
             if (insert(it))
                 added++;
-        return added + " items added and " + (arr.length - added) + " not exist";
+        return added + " items added and " + (arr.length - added) + " already exist";
         // return added + " items added and " + (arr.length - added) + " not exist" + ",
         // num of cells in level2 = "
         // + order;

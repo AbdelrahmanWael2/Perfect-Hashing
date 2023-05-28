@@ -36,11 +36,11 @@ class ON_DictionaryTest {
         void batchInsert() throws IOException {
                 ON_Dictionary d1 = new ON_Dictionary(1000000);
 
-                assertEquals("8 items added and 999992 not exist",
+                assertEquals("8 items added and 999992 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
-                assertEquals("0 items added and 1000000 not exist",
+                assertEquals("0 items added and 1000000 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
-                assertEquals("1000000 items added and 0 not exist",
+                assertEquals("1000000 items added and 0 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
 
         }
@@ -48,7 +48,7 @@ class ON_DictionaryTest {
         @org.junit.jupiter.api.Test
         void batchDelete() throws IOException {
                 ON_Dictionary d1 = new ON_Dictionary(1000000);
-                assertEquals("1000000 items added and 0 not exist",
+                assertEquals("1000000 items added and 0 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
                 assertEquals("1000000 items deleted 0 items not exist",
                                 d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
@@ -74,9 +74,9 @@ class ON_DictionaryTest {
                 assertEquals("Ali not found", d1.search("Ali"));
                 assertEquals("0 items deleted 1000000 items not exist",
                                 d1.batchDelete("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
-                assertEquals("8 items added and 999992 not exist",
+                assertEquals("8 items added and 999992 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test.txt"));
-                assertEquals("1000000 items added and 0 not exist",
+                assertEquals("1000000 items added and 0 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test2.txt"));
                 assertEquals(true, d1.delete("mango"));
                 assertEquals("7 items deleted 999993 items not exist",
@@ -87,7 +87,7 @@ class ON_DictionaryTest {
         @org.junit.jupiter.api.Test
         void test3() throws IOException {
                 ON_Dictionary d1 = new ON_Dictionary(6);
-                assertEquals("5 items added and 3 not exist",
+                assertEquals("5 items added and 3 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
                 // deleted element from the 5 then we batch delete the file we will see that 4
                 // items is deleted only not file
@@ -103,7 +103,7 @@ class ON_DictionaryTest {
         @org.junit.jupiter.api.Test
         void test4() throws IOException {
                 ON_Dictionary d1 = new ON_Dictionary(6);
-                assertEquals("5 items added and 3 not exist",
+                assertEquals("5 items added and 3 already exist",
                                 d1.batchInsert("/home/ahmed/level2term2/Ds2/Perfect-Hashing/src/Test3.txt"));
                 assertEquals("belal inserted successfully", d1.insert("belal"));
                 assertEquals("belal found successfully", d1.search("belal"));
